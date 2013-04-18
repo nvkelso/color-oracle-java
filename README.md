@@ -39,4 +39,4 @@ Color Oracle is using the best available algorithm for simulating color vision i
 
 ==========
 
-© 2006-2012 by [Bernhard Jenny](mailto:jennyb@geo.oregonstate.edu), Oregon State University.
+© 2006-2013 by [Bernhard Jenny](mailto:jennyb@geo.oregonstate.edu), Oregon State University.
