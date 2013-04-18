@@ -1,0 +1,45 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>..\dist\ColorOracle.jar</jar>
+  <outfile>ColorOracle.exe</outfile>
+  <errTitle>Color Oracle</errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://colororacle.org/</supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>icons.ico</icon>
+  <singleInstance>
+    <mutexName>ika.colororacle</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.2.1.0</fileVersion>
+    <txtFileVersion>1.2.1 for Java 6 or higher</txtFileVersion>
+    <fileDescription>Color Oracle</fileDescription>
+    <copyright>Bernhard Jenny, Oregon State University</copyright>
+    <productVersion>1.2.1.0</productVersion>
+    <txtProductVersion>1.2.1 for Java 6 or higher</txtProductVersion>
+    <productName>Color Oracle</productName>
+    <companyName></companyName>
+    <internalName>Color Oracle</internalName>
+    <originalFilename>ColorOracle.exe</originalFilename>
+  </versionInfo>
+  <messages>
+    <startupErr>An error occurred while starting Color Oracle.</startupErr>
+    <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
+    <jreVersionErr>Color Oracle requires a Java Runtime Environment 6 or higher. </jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+    <instanceAlreadyExistsMsg>An application instance is already running.</instanceAlreadyExistsMsg>
+  </messages>
+</launch4jConfig>

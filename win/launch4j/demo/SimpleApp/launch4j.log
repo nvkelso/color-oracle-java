@@ -1,0 +1,20 @@
+
+
+CmdLine:	D:\Home\Greg\src\launch4j\demo\SimpleApp\SimpleApp.exe --l4j-debug
+WOW64:		yes
+Working dir:	D:\Home\Greg\src\launch4j\demo\SimpleApp\.
+Check launcher:	 (n/a)
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.7
+Match:		SOFTWARE\JavaSoft\Java Runtime Environment\1.7.0_09
+Using 64-bit runtime.
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.7
+Ignore:		SOFTWARE\JavaSoft\Java Development Kit\1.7.0_09
+Using 64-bit runtime.
+Check launcher:	C:\Program Files\Java\jre7\bin\javaw.exe (OK)
+Copy:		C:\Program Files\Java\jre7\bin\javaw.exe -> C:\Program Files\Java\jre7\launch4j-tmp\SimpleApp.exe
+Launcher:	C:\Program Files\Java\jre7\bin\javaw.exe
+Launcher args:	-jar "D:\Home\Greg\src\launch4j\demo\SimpleApp\SimpleApp.exe"
+Args length:	61/32768 chars
+Exit code:	259
