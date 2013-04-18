@@ -1,3 +1,5 @@
+![image](http://colororacle.org/rw_common/images/icon48x48.png)
+
 # Color Oracle
 
 _Design for the Color Impaired_
