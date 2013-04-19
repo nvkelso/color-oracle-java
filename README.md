@@ -37,6 +37,10 @@ Color Oracle is using the best available algorithm for simulating color vision i
 
 * **Version 1.2 for [Linux](http://colororacle.org/ColorOracleJar.zip)** - Requires [Java 6 or 7](http://java.com/). Recent versions of Ubuntu are not supported (because of wonky Java support on Ubuntu).
 
+##License
+
+CC-BY using the [MIT License](http://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
+
 ==========
 
 © 2006-2013 by [Bernhard Jenny](mailto:jennyb@geo.oregonstate.edu), Oregon State University.
