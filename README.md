@@ -29,7 +29,7 @@ Color Oracle is a work in progress and will improve with time and your input. Pl
 ##Note
 Color Oracle is using the best available algorithm for simulating color vision impairment. However, highly saturated color may not simulate well using the present version of Color Oracle.
 
-##Downlaods
+##Downloads
 
 * **Version 1.2.1 for [Windows](http://colororacle.org/ColorOracleWin.zip)** - Requires [Java 6 or 7](http://java.com/).
 
