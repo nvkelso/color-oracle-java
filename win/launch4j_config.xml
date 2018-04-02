@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>..\dist\ColorOracle.jar</jar>
+  <jar>../dist/ColorOracle.jar</jar>
   <outfile>ColorOracle.exe</outfile>
   <errTitle>Color Oracle</errTitle>
   <cmdLine></cmdLine>
@@ -9,8 +10,8 @@
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl>http://colororacle.org/</supportUrl>
-  <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
+  <restartOnCrash>true</restartOnCrash>
   <manifest></manifest>
   <icon>icons.ico</icon>
   <singleInstance>
@@ -19,21 +20,26 @@
   </singleInstance>
   <jre>
     <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>1.6.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
-    <fileVersion>1.2.1.0</fileVersion>
-    <txtFileVersion>1.2.1 for Java 6 or higher</txtFileVersion>
+    <fileVersion>1.3.0.0</fileVersion>
+    <txtFileVersion>1.3.0 for Java 6 or higher</txtFileVersion>
     <fileDescription>Color Oracle</fileDescription>
-    <copyright>Bernhard Jenny, Oregon State University</copyright>
-    <productVersion>1.2.1.0</productVersion>
-    <txtProductVersion>1.2.1 for Java 6 or higher</txtProductVersion>
+    <copyright>B. Jenny &amp; N.V. Kelso</copyright>
+    <productVersion>1.3.0.0</productVersion>
+    <txtProductVersion>1.3.0 for Java 6 or higher</txtProductVersion>
     <productName>Color Oracle</productName>
     <companyName></companyName>
     <internalName>Color Oracle</internalName>
     <originalFilename>ColorOracle.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
   </versionInfo>
   <messages>
     <startupErr>An error occurred while starting Color Oracle.</startupErr>

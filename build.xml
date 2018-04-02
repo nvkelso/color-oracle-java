@@ -67,13 +67,31 @@
 
     -->
     
-    <target name="-post-jar">
+    <!-- test whether launch4j directory exists -->
+    <target name="launch4j.dir.check">
+        <condition property="launch4j.dir.exists">
+            <available file="win/launch4j" type="dir" />
+        </condition>
+    </target>
+  
+    <!-- build Windows exe if launch4j is installed -->
+    <target name="run.launch4j" depends="launch4j.dir.check" if="launch4j.dir.exists">
+        <!-- Create a Windows exe file for Windows -->
         <property name="launch4j.dir" location="win/launch4j" />
         <taskdef name="launch4j"
                  classname="net.sf.launch4j.ant.Launch4jTask"
                  classpath="${launch4j.dir}/launch4j.jar
         :${launch4j.dir}/lib/xstream.jar" />
         <launch4j configFile="win/launch4j_config.xml" />
+        
+        <!-- Zip the generated exe file -->
+        <zip destfile="win/ColorOracle.zip">
+            <fileset dir="win/" includes="ColorOracle.exe"/>
+        </zip>
+    </target>
+    
+    <target name="-post-jar">
+         <antcall target="run.launch4j"/>
     </target>
     
 </project>

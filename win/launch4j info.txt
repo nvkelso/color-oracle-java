@@ -1,0 +1,2 @@
+To create a Windows executable file, place a copy of launch4j here. Name it "launch4j".
+http://launch4j.sourceforge.net
