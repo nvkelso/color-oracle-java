@@ -94,4 +94,9 @@
          <antcall target="run.launch4j"/>
     </target>
     
+    <target name="-post-clean">
+        <delete file="win/ColorOracle.exe"/>
+        <delete file="win/ColorOracle.zip"/>
+    </target>
+    
 </project>
