@@ -1,0 +1,6 @@
+#OS files
+[Tt]humbs.db
+*.DS_Store
+
+nbproject/private
+build
