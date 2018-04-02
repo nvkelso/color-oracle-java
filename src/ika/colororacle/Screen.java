@@ -15,31 +15,6 @@ import java.util.ArrayList;
 
 final class Screen {
 
-    /*
-    public static void main(String[] args) {
-        
-        Screen.detectScreens();
-
-        // simulate color-impaired vision for all attached screens
-        for (Screen screen : Screen.getScreens()) {
-            try {
-                //System.out.println();
-                //System.out.println("Screen " + screen.toString());
-
-                // don't take a screenshot when a color-impaired simulation
-                // is currently visible. Instead, use the same screenshot again.
-                screen.takeScreenshot();
-                
-                javax.imageio.ImageIO.write(screen.screenshotImage, "png", new java.io.File("/Volumes/Macintosh HD/Users/jenny/Desktop/screenshot" + Screen.getScreens().indexOf(screen) + ".png"));
-            } catch (IOException ex) {
-                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (AWTException ex) {
-                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    */
-
     /**
      * An array with all attached screens.
      */
@@ -48,14 +23,14 @@ final class Screen {
     public static ArrayList<Screen> getScreens() {
         return screens;
     }
-    
+
     public static void detectScreens() {
 
         // remove previous screens
         Screen.screens.clear();
-        
+
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        
+
         // multiple monitors are only supported by Color Oracle on Windows systems.
         // Linux systems are not reliable. Mac is inconsitent between versions
         // for Robot.createScreenCapture().
@@ -68,13 +43,13 @@ final class Screen {
             GraphicsDevice gd = ge.getDefaultScreenDevice();
             Screen.screens.add(new Screen(gd.getDefaultConfiguration()));
         }
-        
+
     }
-    
+
     public MainWindow simulationWindow = null;
     public BufferedImage screenshotImage = null;
     public GraphicsConfiguration gc = null;
-    
+
     private Screen(GraphicsConfiguration gc) {
         super();
         this.gc = gc;
@@ -88,7 +63,7 @@ final class Screen {
     }
 
     private void createSimulationWindow(ColorOracle colorOracle) {
-        this.simulationWindow = new MainWindow(null, false, colorOracle);
+        simulationWindow = new MainWindow(null, false, colorOracle);
 
         // add event listeners that will hide the window when a key is pressed,
         // or when the window looses focus.
@@ -97,18 +72,17 @@ final class Screen {
         // Therefore the mouse wheel event listener is attached to a child of
         // the MainWindow (the ContentPane).
         // Note: mouse events are handled by ImageDisplayWithPanel
-        this.simulationWindow.addKeyListener(colorOracle);
-        this.simulationWindow.addWindowListener(colorOracle);
-        this.simulationWindow.addFocusListener(colorOracle);
-        this.simulationWindow.getContentPane().addMouseWheelListener(colorOracle);
+        simulationWindow.addKeyListener(colorOracle);
+        simulationWindow.addWindowListener(colorOracle);
+        simulationWindow.addFocusListener(colorOracle);
+        simulationWindow.getContentPane().addMouseWheelListener(colorOracle);
 
-        //System.out.println("Window: " + this.getUsableScreenArea());
-
+        //System.out.println("Window: " + getUsableScreenArea());
         // set size and position of the window
-        this.simulationWindow.setBounds(this.getUsableScreenArea());
+        simulationWindow.setBounds(getUsableScreenArea());
         // need to validate to fix bug in AWT, see
         // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4919042
-        this.simulationWindow.validate();
+        simulationWindow.validate();
     }
 
     private Rectangle getUsableScreenArea() {
@@ -138,39 +112,39 @@ final class Screen {
         screenRect.width -= screenInsets.left + screenInsets.right;
         screenRect.height -= screenInsets.top + screenInsets.bottom;
 
-        Robot robot = new Robot(this.gc.getDevice());
-        this.screenshotImage = robot.createScreenCapture(screenRect);
+        Robot robot = new Robot(gc.getDevice());
+        screenshotImage = robot.createScreenCapture(screenRect);
     }
 
-    public void showSimulationImage(BufferedImage simulationImage, 
+    public void showSimulationImage(BufferedImage simulationImage,
             ColorOracle colorOracle, Image panel) {
 
         // don't create a window if there is already one visible
-        if (this.simulationWindow == null) {
-            this.createSimulationWindow(colorOracle);
+        if (simulationWindow == null) {
+            createSimulationWindow(colorOracle);
         }
-        this.simulationWindow.setImage(simulationImage);
-        this.simulationWindow.setPanel(panel);
+        simulationWindow.setImage(simulationImage);
+        simulationWindow.setPanel(panel);
 
         // Bring our application to the foreground. This discussion is for
         // frames, not dialogs:
         // http://forum.java.sun.com/thread.jspa?threadID=640210&messageID=3762680
-        this.simulationWindow.setVisible(true);
-        this.simulationWindow.requestFocus();
-        this.simulationWindow.toFront();
+        simulationWindow.setVisible(true);
+        simulationWindow.requestFocus();
+        simulationWindow.toFront();
     }
 
     /**
-     * Hides the simulation window and deallocates the window and the
-     * screenshot image.
+     * Hides the simulation window and deallocates the window and the screenshot
+     * image.
      */
     public void hideSimulation() {
 
-        if (this.simulationWindow != null) {
-            this.simulationWindow.setVisible(false);
-            this.simulationWindow.dispose();
-            this.simulationWindow = null;
+        if (simulationWindow != null) {
+            simulationWindow.setVisible(false);
+            simulationWindow.dispose();
+            simulationWindow = null;
         }
-        this.screenshotImage = null;
+        screenshotImage = null;
     }
 }

@@ -13,12 +13,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.*;
 
 /**
- * A simulator for color-impaired vision (deuteranopia, protanopia and tritanopia).
+ * A simulator for color-impaired vision (deuteranopia, protanopia and
+ * tritanopia).
  *
- * For a description of the algorithm, see:
- * Vienot, F., Brettel, H., Mollon, J.D., (1999). Digital video colourmaps for
- * checking the legibility of displays by dichromats. Color Research and 
- * Application 24, 243-252.
+ * For a description of the algorithm, see: Vienot, F., Brettel, H., Mollon,
+ * J.D., (1999). Digital video colourmaps for checking the legibility of
+ * displays by dichromats. Color Research and Application 24, 243-252.
  *
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich.
  */
@@ -30,7 +30,7 @@ public class Simulator {
     static final double GAMMA = 2.2;
     static final double GAMMA_INV = 1. / GAMMA;
     /**
-     * A lookup table for the conversion from gamma-corrected sRGB values 
+     * A lookup table for the conversion from gamma-corrected sRGB values
      * [0..255] to linear RGB values [0..32767].
      */
     static final short[] rgb2lin_red_LUT;
@@ -47,7 +47,7 @@ public class Simulator {
         }
     }
     /**
-     * A lookup table for the conversion of linear RGB values [0..255] to 
+     * A lookup table for the conversion of linear RGB values [0..255] to
      * gamma-corrected sRGB values [0..255].
      */
     static final byte[] lin2rgb_LUT;
@@ -64,33 +64,37 @@ public class Simulator {
      */
     BufferedImageOp op;
 
-    /** Creates a new instance of Simulator */
+    /**
+     * Creates a new instance of Simulator
+     */
     public Simulator() {
     }
 
     /**
      * Filter an image and return a new image with the filtered result.
+     *
      * @normal The image with normal vision.
      * @return The image with simulated color vision impairment.
      */
     public BufferedImage filter(BufferedImage normal) {
-        return this.op.filter(normal, null);
+        return op.filter(normal, null);
     }
 
     /**
      * Simulate color impaired vision.
+     *
      * @param simulationType The type of impairment to simulate.
      */
     void simulate(Simulation simulationType) {
         switch (simulationType) {
             case deutan:
-                this.op = new RedGreenFilter(9591, 23173, -730);
+                op = new RedGreenFilter(9591, 23173, -730);
                 break;
             case protan:
-                this.op = new RedGreenFilter(3683, 29084, 131);
+                op = new RedGreenFilter(3683, 29084, 131);
                 break;
             case tritan:
-                this.op = new TritanFilter();
+                op = new TritanFilter();
                 break;
         }
     }
@@ -113,12 +117,11 @@ public class Simulator {
         @Override
         public BufferedImage filter(BufferedImage src, BufferedImage dst) {
             if (dst == null) {
-                dst = this.createCompatibleDestImage(src, null);
+                dst = createCompatibleDestImage(src, null);
             }
 
             // make sure the two images have the same size, color space, etc.
             // MISSING !!! ???
-
             DataBufferInt inBuffer = (DataBufferInt) src.getRaster().getDataBuffer();
             DataBufferInt outBuffer = (DataBufferInt) dst.getRaster().getDataBuffer();
             int[] inData = inBuffer.getData();
@@ -250,12 +253,11 @@ public class Simulator {
             final float c2 = anchor_e0 * 0.2237f - anchor_e1 * 0.1284f;
 
             if (dst == null) {
-                dst = this.createCompatibleDestImage(src, null);
+                dst = createCompatibleDestImage(src, null);
             }
 
             // make sure the two images have the same size, color space, etc.
             // MISSING FIXME
-
             DataBufferInt inBuffer = (DataBufferInt) src.getRaster().getDataBuffer();
             DataBufferInt outBuffer = (DataBufferInt) dst.getRaster().getDataBuffer();
             int[] inData = inBuffer.getData();
@@ -283,7 +285,7 @@ public class Simulator {
                     /* Convert to LMS (dot product with transform matrix) */
                     final float L = (r * 0.05059983f + g * 0.08585369f + b * 0.00952420f) / 32767.f;
                     final float M = (r * 0.01893033f + g * 0.08925308f + b * 0.01370054f) / 32767.f;
-                    float S = (r * 0.00292202f + g * 0.00975732f + b * 0.07145979f) / 32767.f;
+                    float S; // = (r * 0.00292202f + g * 0.00975732f + b * 0.07145979f) / 32767.f;
 
                     final float tmp = M / L;
 

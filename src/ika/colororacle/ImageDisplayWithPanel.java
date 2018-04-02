@@ -4,7 +4,6 @@
  * Created on February 22, 2007, 3:16 PM
  *
  */
-
 package ika.colororacle;
 
 import java.awt.Graphics;
@@ -17,28 +16,29 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * ImageDisplayWithPanel extends ImageDisplay by drawing a second centered 
- * raster image ( = the panel) over the image drawn by ImageDisplay. The panel 
+ * ImageDisplayWithPanel extends ImageDisplay by drawing a second centered
+ * raster image ( = the panel) over the image drawn by ImageDisplay. The panel
  * can be interactively moved with the mouse.
+ *
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich.
  */
-public class ImageDisplayWithPanel extends ImageDisplay 
+public class ImageDisplayWithPanel extends ImageDisplay
         implements MouseListener, MouseMotionListener {
-    
+
     /**
      * The raster image to display.
      */
     private Image panel = null;
-    
+
     /**
-     * Vertical position of the top left corner of the panel.
-     * The panel will be centered when it is first drawn.
+     * Vertical position of the top left corner of the panel. The panel will be
+     * centered when it is first drawn.
      */
     private int panelTop = -1;
-    
+
     /**
-     * Horizontal position of the top left corner of the panel.
-     * The panel will be centered when it is first drawn.
+     * Horizontal position of the top left corner of the panel. The panel will
+     * be centered when it is first drawn.
      */
     private int panelLeft = -1;
 
@@ -47,94 +47,97 @@ public class ImageDisplayWithPanel extends ImageDisplay
      * of the mouse click that started a dragging operation.
      */
     private int dx = 0;
-    
+
     /**
      * Vertical distance between the left border of the panel and the position
      * of the mouse click that started a dragging operation.
      */
     private int dy = 0;
-    
+
     /**
-     * Flag that is true if the panel is currently being dragged, false otherwise.
+     * Flag that is true if the panel is currently being dragged, false
+     * otherwise.
      */
     private boolean dragging = false;
-    
+
     /**
      * A reference to the controller of the application, which is used to hide
      * the main window if the user clicks outside the panel.
      */
-    private ColorOracle colorOracle;
-    
-    /** Creates a new instance of ImageDisplayWithPanel */
+    private final ColorOracle colorOracle;
+
+    /**
+     * Creates a new instance of ImageDisplayWithPanel
+     */
     public ImageDisplayWithPanel(ColorOracle colorOracle) {
         this.colorOracle = colorOracle;
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
-    
+
     /**
      * Set the image to display.
      */
-    public void setPanel (Image panel) {
+    public void setPanel(Image panel) {
         this.panel = panel;
-        this.repaint();
+        repaint();
     }
-    
+
     /**
      * Draw the panel image over what ImageDisplay draws.
      */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        
-        if (this.panel == null) {
+
+        if (panel == null) {
             return;
         }
-        
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_OFF);
-        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,
                 RenderingHints.VALUE_COLOR_RENDER_SPEED);
-        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION,
                 RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED);
-        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, 
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING,
                 RenderingHints.VALUE_DITHER_DISABLE);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_SPEED);
-        
+
         // make sure the panel is entirely visible. This also initializes 
         // the position of the panel when it is first drawn.
-        if (this.panelTop < 0 || this.panelLeft < 0) {
-            this.panelLeft = (this.getWidth() - this.panel.getWidth(null)) / 2;
-            this.panelTop = (int)((this.getHeight() - this.panel.getHeight(null)) / 2.5);
+        if (panelTop < 0 || panelLeft < 0) {
+            panelLeft = (getWidth() - panel.getWidth(null)) / 2;
+            panelTop = (int) ((getHeight() - panel.getHeight(null)) / 2.5);
         }
         g2d.drawImage(panel, panelLeft, panelTop, this);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        this.colorOracle.switchToNormalVision();
+        colorOracle.switchToNormalVision();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (this.pointOnPanel(e.getPoint())) {
-            this.dx = e.getX() - this.panelLeft;
-            this.dy = e.getY() - this.panelTop;
-            this.dragging = true;
+        if (pointOnPanel(e.getPoint())) {
+            dx = e.getX() - panelLeft;
+            dy = e.getY() - panelTop;
+            dragging = true;
         } else {
-            this.dragging = false;
-            this.colorOracle.switchToNormalVision();
+            dragging = false;
+            colorOracle.switchToNormalVision();
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (this.dragging) {
-            this.dragging = false;
+        if (dragging) {
+            dragging = false;
         } else {
-            this.colorOracle.switchToNormalVision();
+            colorOracle.switchToNormalVision();
         }
     }
 
@@ -148,50 +151,53 @@ public class ImageDisplayWithPanel extends ImageDisplay
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!this.dragging) {
+        if (!dragging) {
             return;
         }
-        
-        final int panelWidth = this.panel.getWidth(null);
-        final int panelHeight = this.panel.getHeight(null);
-        
+
+        final int panelWidth = panel.getWidth(null);
+        final int panelHeight = panel.getHeight(null);
+
         // remember the old position of the panel
-        final int oldPanelLeft = this.panelLeft;
-        final int oldPanelTop = this.panelTop;
+        final int oldPanelLeft = panelLeft;
+        final int oldPanelTop = panelTop;
 
         // compute the new position of the panel and make sure it is entirely
         // visible on screen.
-        this.panelLeft = Math.max(0, e.getX() - this.dx);
-        this.panelTop = Math.max(0, e.getY() - this.dy);
-        if (this.panelLeft + panelWidth > this.getWidth())
-            this.panelLeft = this.getWidth() - panelWidth;
-        if (this.panelTop + panelHeight > this.getHeight())
-            this.panelTop = this.getHeight() - panelHeight;
-        
+        panelLeft = Math.max(0, e.getX() - dx);
+        panelTop = Math.max(0, e.getY() - dy);
+        if (panelLeft + panelWidth > getWidth()) {
+            panelLeft = getWidth() - panelWidth;
+        }
+        if (panelTop + panelHeight > getHeight()) {
+            panelTop = getHeight() - panelHeight;
+        }
+
         // compute the dirty region: the union of the area previously covered 
         // by the panel and the area covered now.
         final int dirtyX, dirtyY, dirtyWidth, dirtyHeight;
-        if (this.panelLeft > oldPanelLeft) {
+        if (panelLeft > oldPanelLeft) {
             dirtyX = oldPanelLeft;
-            dirtyWidth = this.panelLeft + panelWidth - oldPanelLeft;
+            dirtyWidth = panelLeft + panelWidth - oldPanelLeft;
         } else {
-            dirtyX = this.panelLeft;
-            dirtyWidth = oldPanelLeft + panelWidth - this.panelLeft;
+            dirtyX = panelLeft;
+            dirtyWidth = oldPanelLeft + panelWidth - panelLeft;
         }
-        if (this.panelTop > oldPanelTop) {
+        if (panelTop > oldPanelTop) {
             dirtyY = oldPanelTop;
-            dirtyHeight = this.panelTop + panelHeight - oldPanelTop;
+            dirtyHeight = panelTop + panelHeight - oldPanelTop;
         } else {
-            dirtyY = this.panelTop;
-            dirtyHeight = oldPanelTop + panelHeight - this.panelTop;
+            dirtyY = panelTop;
+            dirtyHeight = oldPanelTop + panelHeight - panelTop;
         }
-        
+
         // only paint the dirty region.
         // paintImmediately is safe to call, since this is running in the 
         // swing event dispatching thread.
-        this.paintImmediately(dirtyX, dirtyY, dirtyWidth, dirtyHeight);
+        paintImmediately(dirtyX, dirtyY, dirtyWidth, dirtyHeight);
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
     }
 
@@ -199,13 +205,15 @@ public class ImageDisplayWithPanel extends ImageDisplay
      * Returns true if the passed point is inside the panel, false otherwise.
      */
     private boolean pointOnPanel(Point point) {
-        final int w = this.panel.getWidth(null);
-        final int h = this.panel.getHeight(null);
-        if (point.x < this.panelLeft || point.x >  this.panelLeft + w)
+        final int w = panel.getWidth(null);
+        final int h = panel.getHeight(null);
+        if (point.x < panelLeft || point.x > panelLeft + w) {
             return false;
-        if (point.y <  this.panelTop || point.y > this.panelTop + h)
+        }
+        if (point.y < panelTop || point.y > panelTop + h) {
             return false;
+        }
         return true;
     }
-    
+
 }

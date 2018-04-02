@@ -23,7 +23,7 @@
             <Font component="textLabel" property="font" relativeSize="true" size="-2"/>
           </FontInfo>
         </Property>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;Version 1.2.1&lt;br&gt;&lt;br&gt;Programming by&lt;br&gt; Bernhard Jenny&lt;br&gt; Oregon State University&lt;br&gt; &lt;br&gt; Ideas, Testing and Icon by&lt;br&gt; Nathaniel Vaughn Kelso,&lt;br&gt; Stamen Design.&lt;br&gt; &lt;br&gt; Copyright 2006-2012,&lt;br&gt; all rights reserved.&lt;br&gt; &lt;br&gt; For updates and further information see:&lt;br&gt;&lt;/center&gt;&lt;/html&gt;"/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;Version 1.3&lt;br&gt;&lt;br&gt;Programming by&lt;br&gt;Bernhard Jenny, Monash University&lt;br&gt;and other contributors.&lt;br&gt;&lt;br&gt;Ideas, Testing and Icon by&lt;br&gt;Nathaniel Vaughn Kelso&lt;br&gt;&lt;br&gt;&amp;copy; B. Jenny &amp; N.V. Kelso 2006&#x2013;2018.&lt;br&gt;CC-BY using the MIT License&lt;br&gt;&lt;br&gt;For updates and further information see:&lt;br&gt;&lt;/center&gt;&lt;/html&gt;"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
