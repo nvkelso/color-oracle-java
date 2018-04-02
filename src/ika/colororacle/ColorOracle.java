@@ -44,19 +44,12 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     private static final String MENUICON = "menuIcon.gif";
 
     /**
-     * The information panel image for deuteranopia.
+     * The information panels for the different types of simulation.
      */
     private final Image deutanPanel = loadImage("deutanpanel.png");
-
-    /**
-     * The information panel image for protanopia.
-     */
     private final Image protanPanel = loadImage("protanpanel.png");
-
-    /**
-     * The information panel image for tritanopia.
-     */
     private final Image tritanPanel = loadImage("tritanpanel.png");
+    private final Image grayscalePanel = loadImage("grayscalepanel.png");
 
     /**
      * Wait a few milliseconds before taking a screenshot until the menu has
@@ -67,20 +60,15 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     /**
      * Enumerate the four possible states of the current simulation.
      */
-    enum Simulation {
+    protected enum Simulation {
 
-        normal, deutan, protan, tritan
+        normal, deutan, protan, tritan, grayscale
     }
 
     /**
      * Keep track of the current type of color-impairment simulation.
      */
     private Simulation currentSimulation = Simulation.normal;
-
-    /**
-     * A flag that is true when a save-as dialog is open and false otherwise.
-     */
-    private boolean currentlySavingImage = false;
 
     /**
      * The about dialog.
@@ -93,24 +81,14 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     private final Simulator simulator = new Simulator();
 
     /**
-     * A menu item for normal vision that will be added to the tray menu.
+     * Menu items for different types of vision that will be added to the tray
+     * menu.
      */
     private final CheckboxMenuItem normalMenuItem = new CheckboxMenuItem();
-
-    /**
-     * A menu item for deuteranopia that will be added to the tray menu.
-     */
     private final CheckboxMenuItem deutanMenuItem = new CheckboxMenuItem();
-
-    /**
-     * A menu item for protanopia that will be added to the tray menu.
-     */
     private final CheckboxMenuItem protanMenuItem = new CheckboxMenuItem();
-
-    /**
-     * A menu item for tritanopia that will be added to the tray menu.
-     */
     private final CheckboxMenuItem tritanMenuItem = new CheckboxMenuItem();
+    private final CheckboxMenuItem grayscaleMenuItem = new CheckboxMenuItem();
 
     /**
      * The About menu item that will be added to the tray menu.
@@ -408,6 +386,21 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
         });
         menu.add(tritanMenuItem);
 
+        // grayscale vision
+        grayscaleMenuItem.setLabel("Grayscale");
+        grayscaleMenuItem.addItemListener(new java.awt.event.ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    simulate(ColorOracle.Simulation.grayscale);
+                } else if (currentSimulation == Simulation.grayscale) {
+                    grayscaleMenuItem.setState(true); // this will not trigger another event
+                }
+            }
+        });
+        menu.add(grayscaleMenuItem);
+
         menu.addSeparator();
 
         // about
@@ -436,22 +429,6 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
 
         return menu;
 
-    }
-
-    /**
-     * Returns the name of the current simulation.
-     */
-    private String currentSimulationName() {
-        switch (currentSimulation) {
-            case deutan:
-                return "Deuteranopia";
-            case protan:
-                return "Protanopia";
-            case tritan:
-                return "Tritanopia";
-            default:
-                return "";
-        }
     }
 
     /**
@@ -484,9 +461,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
 
                 // apply a simulation filter to the screenshot
                 BufferedImage img = simulator.filter(screen.screenshotImage);
-                //img = computeDifference(img, screen.screenshotImage);
 
-                // ImageIO.write(img, "png", new File("screen" + Screen.getScreens().indexOf(screen) + ".png"));
                 // show the result of the simulation in a window
                 screen.showSimulationImage(img, this, panel);
             }
@@ -519,23 +494,15 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     }
 
     /**
-     * Updates the menu: makes sure only one item has a check mark, enables or
-     * disables the menu items, and changes the title of the Save menu item.
+     * Updates the menu: makes sure only one item has a check mark.
      */
     private void updateMenuState() {
-
         // make sure only one menu item is checked
         normalMenuItem.setState(currentSimulation == Simulation.normal);
         deutanMenuItem.setState(currentSimulation == Simulation.deutan);
         protanMenuItem.setState(currentSimulation == Simulation.protan);
         tritanMenuItem.setState(currentSimulation == Simulation.tritan);
-
-        // disable menu items if the Save dialog is in the foreground.
-        normalMenuItem.setEnabled(!currentlySavingImage);
-        deutanMenuItem.setEnabled(!currentlySavingImage);
-        protanMenuItem.setEnabled(!currentlySavingImage);
-        tritanMenuItem.setEnabled(!currentlySavingImage);
-        aboutMenuItem.setEnabled(!currentlySavingImage);
+        grayscaleMenuItem.setState(currentSimulation == Simulation.grayscale);
     }
 
     /**
@@ -586,6 +553,9 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
                     break;
                 case tritan:
                     simulateAndShow(tritanPanel);
+                    break;
+                case grayscale:
+                    simulateAndShow(grayscalePanel);
                     break;
             }
         } catch (Exception ex) {

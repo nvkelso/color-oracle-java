@@ -27,47 +27,48 @@ public class Simulator {
     /**
      * Default screen gamma on Windows is 2.2.
      */
-    static final double GAMMA = 2.2;
-    static final double GAMMA_INV = 1. / GAMMA;
+    private static final double GAMMA = 2.2;
+    private static final double GAMMA_INV = 1. / GAMMA;
+    
     /**
      * A lookup table for the conversion from gamma-corrected sRGB values
      * [0..255] to linear RGB values [0..32767].
      */
-    static final short[] rgb2lin_red_LUT;
+    private static final short[] SRGB_TO_LINRGB;
 
     static {
-        // initialize rgb2lin_red_LUT
-        rgb2lin_red_LUT = new short[256];
+        // initialize SRGB_TO_LINRGB
+        SRGB_TO_LINRGB = new short[256];
         for (int i = 0; i < 256; i++) {
             // compute linear rgb between 0 and 1
             final double lin = (0.992052 * Math.pow(i / 255., GAMMA) + 0.003974);
 
             // scale linear rgb to 0..32767
-            rgb2lin_red_LUT[i] = (short) (lin * 32767.);
+            SRGB_TO_LINRGB[i] = (short) (lin * 32767.);
         }
     }
     /**
      * A lookup table for the conversion of linear RGB values [0..255] to
      * gamma-corrected sRGB values [0..255].
      */
-    static final byte[] lin2rgb_LUT;
+    private static final byte[] LINRGB_TO_SRGB;
 
     static {
-        // initialize lin2rgb_LUT
-        lin2rgb_LUT = new byte[256];
+        // initialize LINRGB_TO_SRGB
+        LINRGB_TO_SRGB = new byte[256];
         for (int i = 0; i < 256; i++) {
-            lin2rgb_LUT[i] = (byte) (255. * Math.pow(i / 255., GAMMA_INV));
+            LINRGB_TO_SRGB[i] = (byte) (255. * Math.pow(i / 255., GAMMA_INV));
         }
     }
     /**
      * Use this BufferedImageOp for the simulation.
      */
-    BufferedImageOp op;
+    private BufferedImageOp op;
 
     /**
      * Creates a new instance of Simulator
      */
-    public Simulator() {
+    protected Simulator() {
     }
 
     /**
@@ -76,7 +77,7 @@ public class Simulator {
      * @normal The image with normal vision.
      * @return The image with simulated color vision impairment.
      */
-    public BufferedImage filter(BufferedImage normal) {
+    protected BufferedImage filter(BufferedImage normal) {
         return op.filter(normal, null);
     }
 
@@ -85,7 +86,7 @@ public class Simulator {
      *
      * @param simulationType The type of impairment to simulate.
      */
-    void simulate(Simulation simulationType) {
+    protected void simulate(Simulation simulationType) {
         switch (simulationType) {
             case deutan:
                 op = new RedGreenFilter(9591, 23173, -730);
@@ -95,6 +96,9 @@ public class Simulator {
                 break;
             case tritan:
                 op = new TritanFilter();
+                break;
+            case grayscale:
+                op = new GrayscaleFilter();
                 break;
         }
     }
@@ -141,9 +145,9 @@ public class Simulator {
                     final int b = 0xff & in;
 
                     // get linear rgb values in the range 0..2^15-1
-                    final int r_lin = rgb2lin_red_LUT[r];
-                    final int g_lin = rgb2lin_red_LUT[g];
-                    final int b_lin = rgb2lin_red_LUT[b];
+                    final int r_lin = SRGB_TO_LINRGB[r];
+                    final int g_lin = SRGB_TO_LINRGB[g];
+                    final int b_lin = SRGB_TO_LINRGB[b];
 
                     // simulated red and green are identical
                     // scale the matrix values to 0..2^15 for integer computations 
@@ -168,10 +172,10 @@ public class Simulator {
                     }
 
                     // convert reduced linear rgb to gamma corrected rgb
-                    int red = lin2rgb_LUT[r_blind];
+                    int red = LINRGB_TO_SRGB[r_blind];
                     red = red >= 0 ? red : 256 + red; // from unsigned to signed
-                    int blue = lin2rgb_LUT[b_blind];
-                    blue = blue >= 0 ? blue : 256 + blue;   // from unsigned to signed
+                    int blue = LINRGB_TO_SRGB[b_blind];
+                    blue = blue >= 0 ? blue : 256 + blue; // from unsigned to signed
 
                     final int out = 0xff000000 | red << 16 | red << 8 | blue;
 
@@ -222,9 +226,6 @@ public class Simulator {
      * A filter for simulated Tritanopia.
      */
     private class TritanFilter implements BufferedImageOp {
-
-        public TritanFilter() {
-        }
 
         @Override
         public BufferedImage filter(BufferedImage src, BufferedImage dst) {
@@ -278,9 +279,9 @@ public class Simulator {
                     int b = 0xff & rgb;
 
                     // get linear rgb values in the range 0..2^15-1
-                    r = rgb2lin_red_LUT[r];
-                    g = rgb2lin_red_LUT[g];
-                    b = rgb2lin_red_LUT[b];
+                    r = SRGB_TO_LINRGB[r];
+                    g = SRGB_TO_LINRGB[g];
+                    b = SRGB_TO_LINRGB[b];
 
                     /* Convert to LMS (dot product with transform matrix) */
                     final float L = (r * 0.05059983f + g * 0.08585369f + b * 0.00952420f) / 32767.f;
@@ -310,7 +311,7 @@ public class Simulator {
                     } else if (ired > 255) {
                         ired = 255;
                     } else {
-                        ired = lin2rgb_LUT[ired];
+                        ired = LINRGB_TO_SRGB[ired];
                         ired = ired >= 0 ? ired : 256 + ired; // from unsigned to signed
                     }
                     if (igreen < 0) {
@@ -318,7 +319,7 @@ public class Simulator {
                     } else if (igreen > 255) {
                         igreen = 255;
                     } else {
-                        igreen = lin2rgb_LUT[igreen];
+                        igreen = LINRGB_TO_SRGB[igreen];
                         igreen = igreen >= 0 ? igreen : 256 + igreen; // from unsigned to signed
                     }
                     if (iblue < 0) {
@@ -326,11 +327,110 @@ public class Simulator {
                     } else if (iblue > 255) {
                         iblue = 255;
                     } else {
-                        iblue = lin2rgb_LUT[iblue];
+                        iblue = LINRGB_TO_SRGB[iblue];
                         iblue = iblue >= 0 ? iblue : 256 + iblue; // from unsigned to signed
                     }
 
                     final int out = (int) (ired << 16 | igreen << 8 | iblue | 0xff000000);
+
+                    outData[i] = out;
+                    prevIn = in;
+                    prevOut = out;
+                }
+            }
+
+            return dst;
+        }
+
+        @Override
+        public Rectangle2D getBounds2D(BufferedImage src) {
+            return src.getRaster().getBounds();
+        }
+
+        @Override
+        public BufferedImage createCompatibleDestImage(BufferedImage src,
+                ColorModel destCM) {
+            if (destCM == null) {
+                destCM = src.getColorModel();
+            }
+            int width = src.getWidth();
+            int height = src.getHeight();
+            BufferedImage image = new BufferedImage(destCM,
+                    destCM.createCompatibleWritableRaster(width, height),
+                    destCM.isAlphaPremultiplied(), null);
+            return image;
+        }
+
+        @Override
+        public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
+            if (dstPt == null) {
+                dstPt = new Point2D.Float();
+            }
+            dstPt.setLocation(srcPt.getX(), srcPt.getY());
+            return dstPt;
+        }
+
+        @Override
+        public RenderingHints getRenderingHints() {
+            return null;
+        }
+    }
+
+    /**
+     * A filter for grayscale conversion: perceptual luminance-preserving
+     * conversion to grayscale.
+     * https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale
+     */
+    private class GrayscaleFilter implements BufferedImageOp {
+
+        @Override
+        public BufferedImage filter(BufferedImage src, BufferedImage dst) {
+            if (dst == null) {
+                dst = createCompatibleDestImage(src, null);
+            }
+
+            // make sure the two images have the same size, color space, etc.
+            // MISSING FIXME
+            DataBufferInt inBuffer = (DataBufferInt) src.getRaster().getDataBuffer();
+            DataBufferInt outBuffer = (DataBufferInt) dst.getRaster().getDataBuffer();
+            int[] inData = inBuffer.getData();
+            int[] outData = outBuffer.getData();
+
+            int prevIn = 0;
+            int prevOut = 0;
+            final int length = inData.length;
+            for (int i = 0; i < length; i++) {
+                final int in = inData[i];
+                if (in == prevIn) {
+                    outData[i] = prevOut;
+                } else {
+                    final int rgb = inData[i];
+
+                    final int r = (0xff0000 & rgb) >> 16;
+                    final int g = (0xff00 & rgb) >> 8;
+                    final int b = 0xff & rgb;
+
+                    // get linear rgb values in the range 0..2^15-1
+                    final int r_lin = SRGB_TO_LINRGB[r];
+                    final int g_lin = SRGB_TO_LINRGB[g];
+                    final int b_lin = SRGB_TO_LINRGB[b];
+
+                    // perceptual luminance-preserving conversion to grayscale
+                    // https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale
+                    double luminance = 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin;
+                    int linRGB = ((int) (luminance)) >> 8; // divide by 2^8 to rescale
+                    
+                    // convert linear rgb to gamma corrected sRGB
+                    if (linRGB < 0) {
+                        linRGB = 0;
+                    } else if (linRGB > 255) {
+                        linRGB = 255;
+                    } else {
+                        linRGB = LINRGB_TO_SRGB[linRGB];
+                        linRGB = linRGB >= 0 ? linRGB : 256 + linRGB; // from unsigned to signed
+                    }
+
+                    final int out = (int) (linRGB << 16 | linRGB << 8 | linRGB | 0xff000000);
 
                     outData[i] = out;
                     prevIn = in;
