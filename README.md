@@ -4,7 +4,7 @@
 
 _Design for the Color Impaired_
 
-**Go to [http://colororacle.org/](http://colororacle.org/) for usage, design tips, user manual, and links!**
+**Go to [http://colororacle.org/](http://colororacle.org/) for downloads, usage, design tips, user manual, and links!**
 
 **This repo contains the JAVA (Windows, Linux version). Looking for the [Mac](https://github.com/nvkelso/color-oracle) version?**
 
@@ -27,14 +27,9 @@ Color Oracle is using the best available algorithm for simulating color vision i
 
 ## Downloads
 
-* **Version 1.2.1 for [Windows](http://colororacle.org/ColorOracleWin.zip)** - Requires [Java 6 or 7](http://java.com/).
-
-* **Version 1.1.4 for [Mac OS X](http://colororacle.org/ColorOracleMac.zip)** - 10.4 or higher now supports Retina displays and native macOS 10.8 (Java not required)
-
-* **Version 1.2 for [Linux](http://colororacle.org/ColorOracleJar.zip)** - Requires [Java 6 or 7](http://java.com/). Recent versions of Ubuntu are not supported (because of wonky Java support on Ubuntu).
-
+* Download the latest version for macOS, Windows and Linux from http://colororacle.org/.
 ## License
 
 CC-BY using the [MIT License](http://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
 
-© 2006-2013 by Bernhard Jenny, ETH Zurich and Oregon State University.
+© 2006–2018 by Bernhard Jenny and Nathaniel V. Kelso.
