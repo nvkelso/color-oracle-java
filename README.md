@@ -1,10 +1,10 @@
-![image](http://colororacle.org/rw_common/images/icon48x48.png)
+![image](https://colororacle.org/rw_common/images/icon48x48.png)
 
 # Color Oracle
 
 _Design for the Color Impaired_
 
-**Go to [http://colororacle.org/](http://colororacle.org/) for downloads, usage, design tips, user manual, and links!**
+**Go to [https://colororacle.org/](https://colororacle.org/) for downloads, usage, design tips, user manual, and links!**
 
 **This repo contains the JAVA (Windows, Linux version). Looking for the [Mac](https://github.com/nvkelso/color-oracle) version?**
 
@@ -12,11 +12,11 @@ Color Oracle is a free color blindness simulator for Window, Mac and Linux. It t
 
 Color Oracle applies a full screen color filter to art you are designing – independently of the software in use. Eight percent of all males are affected by color vision impairment – make sure that your graphical work is readable by the widest possible audience.
 
-Read this article for more information: [Color Design for the Color Vision Impaired](http://colororacle.org/design.html)
+Read this article for more information: [Color Design for the Color Vision Impaired](https://colororacle.org/design.html)
 
 ## Authors
 
-* Programming of the first version: [Bernie Jenny](http://berniejenny.info).
+* Programming of the first version: [Bernie Jenny](https://berniejenny.info).
 * Ideas, testing and icon: [Nathaniel Vaughn Kelso](https://en.wikipedia.org/wiki/Nathaniel_Vaughn_Kelso).
 
 ## Feedback
@@ -27,9 +27,10 @@ Color Oracle is using the best available algorithm for simulating color vision i
 
 ## Downloads
 
-* Download the latest version for macOS, Windows and Linux from http://colororacle.org/.
+* Download the latest version for macOS, Windows and Linux from https://colororacle.org/.
+
 ## License
 
-CC-BY using the [MIT License](http://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
+Licensed under the [MIT License](https://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
 
 © 2006–2018 by Bernhard Jenny and Nathaniel V. Kelso.
