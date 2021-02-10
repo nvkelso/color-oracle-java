@@ -30,6 +30,6 @@ Color Oracle is using the best available algorithm for simulating color vision i
 * Download the latest version for macOS, Windows and Linux from http://colororacle.org/.
 ## License
 
-CC-BY using the [MIT License](http://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
+Licensed under the [MIT License](http://opensource.org/licenses/MIT), see the LICENSE.txt file for complete details.
 
 © 2006–2018 by Bernhard Jenny and Nathaniel V. Kelso.
