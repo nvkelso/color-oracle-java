@@ -1,0 +1,28 @@
+# Copyright (C) 2021 Sebastian Pipping <sebastian@pipping.org>
+# Licensed under the MIT license
+
+name: Build on Linux using Apache Ant
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: '0 4 * * 5'  # Every Friday at 4am
+
+jobs:
+  build_and_test:
+    name: Build on Linux using Apache Ant
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Install dependencies
+        run: |-
+          sudo apt install --yes --no-install-recommends \
+              ant \
+              openjdk-11-jdk
+
+      - name: Build
+        run: |-
+          ant
+          git ls-files -o
