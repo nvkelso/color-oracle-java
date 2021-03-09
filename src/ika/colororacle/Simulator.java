@@ -74,7 +74,7 @@ public class Simulator {
     /**
      * Filter an image and return a new image with the filtered result.
      *
-     * @normal The image with normal vision.
+     * @param normal The image with normal vision.
      * @return The image with simulated color vision impairment.
      */
     protected BufferedImage filter(BufferedImage normal) {

@@ -196,7 +196,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
      * Loads a raster icon from the /ika/icons/ folder.
      *
      * @param name The name of the icon.
-     * @description A description of the icon that is attached to it.
+     * @param description A description of the icon that is attached to it.
      * @return An ImageIcon.
      *
      */

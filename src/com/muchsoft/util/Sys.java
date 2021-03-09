@@ -29,7 +29,7 @@ package com.muchsoft.util;
  * <p><b>Version History:</b></p>
  * <dl>
  *   <dt> 2004-10-13
- *   <dd> Added a new package, com.muchsoft.util.mac, and a new class, {@link Mac}.
+ *   <dd> Added a new package, com.muchsoft.util.mac, and a new class, Mac.
  *   <dt> 2004-05-04
  *   <dd> isMacOSX() now matches <a href="http://developer.apple.com/technotes/tn2002/tn2110.html">http://developer.apple.com/technotes/tn2002/tn2110.html</a>
  *   <dt> 2003-12-02
