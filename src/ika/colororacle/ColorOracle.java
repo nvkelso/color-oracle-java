@@ -431,8 +431,6 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             // remember the current simulation
             currentSimulation = simulationType;
 
-//            updateMenuState();
-
             // hide the about dialog before taking a screenshot
             if (aboutDialog != null) {
                 aboutDialog.setVisible(false);
@@ -467,9 +465,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     public void switchToNormalVision() {
         // remember the current simulation
         currentSimulation = Simulation.normal;
-
-//        updateMenuState();
-
+        
         // hide the window
         hideSimulation();
     }
