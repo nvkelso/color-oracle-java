@@ -67,7 +67,7 @@ public class AboutPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
         add(homepageButton, gridBagConstraints);
 
-        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ika/icons/icon_big.png"))); // NOI18N
+        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon_big.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 15, 0);
         add(iconLabel, gridBagConstraints);

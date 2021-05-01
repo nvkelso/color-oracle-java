@@ -7,6 +7,8 @@
 package ika.colororacle;
 
 import java.awt.*;
+import dorkbox.systemTray.SystemTray;
+
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -84,16 +86,16 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
      * Menu items for different types of vision that will be added to the tray
      * menu.
      */
-    private final CheckboxMenuItem normalMenuItem = new CheckboxMenuItem();
-    private final CheckboxMenuItem deutanMenuItem = new CheckboxMenuItem();
-    private final CheckboxMenuItem protanMenuItem = new CheckboxMenuItem();
-    private final CheckboxMenuItem tritanMenuItem = new CheckboxMenuItem();
-    private final CheckboxMenuItem grayscaleMenuItem = new CheckboxMenuItem();
+    private final JMenuItem normalMenuItem = new JMenuItem();
+    private final JMenuItem deutanMenuItem = new JMenuItem();
+    private final JMenuItem protanMenuItem = new JMenuItem();
+    private final JMenuItem tritanMenuItem = new JMenuItem();
+    private final JMenuItem grayscaleMenuItem = new JMenuItem();
 
     /**
      * The About menu item that will be added to the tray menu.
      */
-    private final MenuItem aboutMenuItem = new MenuItem();
+    private final JMenuItem aboutMenuItem = new JMenuItem();
 
     private long timeOfLastClickOnTrayIcon = 0;
 
@@ -113,8 +115,8 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             return;
         }
 
-        // default Look and Feel on some systems is Metal, install the native 
-        // look and feel instead.  
+        // default Look and Feel on some systems is Metal, install the native
+        // look and feel instead.
         String nativeLF = UIManager.getSystemLookAndFeelClassName();
         try {
             UIManager.setLookAndFeel(nativeLF);
@@ -140,30 +142,12 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             return;
         }
 
-        // test whether the system supports the SystemTray
-        try {
-            if (!SystemTray.isSupported()) {
-                throw new UnsupportedOperationException("SystemTray not supported");
-            }
-        } catch (Exception ex) {
-            ColorOracle.showErrorMessage("Access to the system tray or "
-                    + "notification area \nis not supported on your system.",
-                    true);
-            Logger.getLogger(ColorOracle.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(-1);
-            return;
-        }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    new ColorOracle();
-                } catch (Exception ex) {
-                    Logger.getLogger(ColorOracle.class.getName()).log(Level.SEVERE, null, ex);
-                    System.exit(-1);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new ColorOracle();
+            } catch (Exception ex) {
+                Logger.getLogger(ColorOracle.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(-1);
             }
         });
     }
@@ -203,7 +187,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     public static ImageIcon loadImageIcon(String name, String description) {
 
         try {
-            String folder = "/ika/icons/";
+            String folder = "/";
             java.net.URL imgURL = ColorOracle.class.getResource(folder + name);
             if (imgURL != null) {
                 ImageIcon imageIcon = new ImageIcon(imgURL, description);
@@ -249,162 +233,92 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
      */
     private void initTrayIcon() throws Exception {
 
-        if (!SystemTray.isSupported()) {
-            throw new Exception(TRAYICONS_NOT_SUPPORTED_MESSAGE);
-        }
+//        if (!SystemTray.isSupported()) {
+//            throw new Exception(TRAYICONS_NOT_SUPPORTED_MESSAGE);
+//        }
 
         // get the SystemTray instance
-        SystemTray tray = SystemTray.getSystemTray();
-
-        // Create an action listener to listen for default actions executed
-        // on the tray icon. On Windows, this is a left double-click on
-        // the tray icon.
-        ActionListener defaultActionListener = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                simulate(ColorOracle.Simulation.deutan);
-            }
-        };
-
-        // create the menu
-        PopupMenu menu = initMenu();
-
-        // get the image for the TrayIcon
+//        SystemTray tray = SystemTray.getSystemTray();
+        SystemTray tray = SystemTray.get("Color Oracle");
         ImageIcon icon = loadImageIcon(MENUICON, "Color Oracle Icon");
         Image image = icon.getImage();
+        tray.setImage(image);
+        tray.setTooltip(TOOLTIP);
+//        final Menu menu = tray.getMenu();
 
-        // create the TrayIcon
-        TrayIcon trayIcon = new TrayIcon(image, TOOLTIP, menu);
-        trayIcon.addActionListener(defaultActionListener);
-        trayIcon.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // event handler that remembers the last time the tray icon was clicked.
-                long currentTime = System.currentTimeMillis();
-                if (currentTime > timeOfLastClickOnTrayIcon) {
-                    timeOfLastClickOnTrayIcon = currentTime;
-                }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        trayIcon.setImageAutoSize(false);
-
-        // add the TrayIcon to the SystemTray
-        tray.add(trayIcon);
-
+        // create the menu
+        JMenu imenu = initMenu();
+        tray.setMenu(imenu);
     }
-
     /**
      * Constructs the menu with all items and event handlers.
      *
      * @return The new PopupMenu that can be added to the tray icon.
      */
-    private PopupMenu initMenu() {
+    private JMenu initMenu() {
 
         // create a menu
-        PopupMenu menu = new PopupMenu();
-        MenuItem quitMenuItem = new MenuItem();
+        JMenu menu = new JMenu();
+        JMenuItem quitMenuItem = new JMenuItem();
 
-        menu.setLabel("PopupMenu");
+        menu.setText("PopupMenu");
 
         // normal vision
-        normalMenuItem.setLabel("Normal Vision");
-        normalMenuItem.setState(true);
-        normalMenuItem.addItemListener(new java.awt.event.ItemListener() {
-
+        normalMenuItem.setText("Normal Vision");
+        normalMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    switchToNormalVision();
-                } else if (currentSimulation == Simulation.normal) {
-                    normalMenuItem.setState(true); // this will not trigger another event
-                }
+            public void actionPerformed(ActionEvent e) {
+                switchToNormalVision();
             }
         });
         menu.add(normalMenuItem);
 
         // deutan vision
         menu.addSeparator();
-        deutanMenuItem.setLabel("Deuteranopia (Common)");
-        deutanMenuItem.addItemListener(new java.awt.event.ItemListener() {
-
+        deutanMenuItem.setText("Deuteranopia (Common)");
+        deutanMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    simulate(ColorOracle.Simulation.deutan);
-                } else if (currentSimulation == Simulation.deutan) {
-                    deutanMenuItem.setState(true); // this will not trigger another event
-                }
+            public void actionPerformed(ActionEvent e) {
+                simulate(Simulation.deutan);
             }
         });
         menu.add(deutanMenuItem);
 
         // protan vision
-        protanMenuItem.setLabel("Protanopia (Rare)");
-        protanMenuItem.addItemListener(new java.awt.event.ItemListener() {
-
+        protanMenuItem.setText("Protanopia (Rare)");
+        protanMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    simulate(ColorOracle.Simulation.protan);
-                } else if (currentSimulation == Simulation.protan) {
-                    protanMenuItem.setState(true); // this will not trigger another event
-                }
+            public void actionPerformed(ActionEvent e) {
+                simulate(Simulation.protan);
             }
         });
         menu.add(protanMenuItem);
 
         // tritan vision
-        tritanMenuItem.setLabel("Tritanopia (Very Rare)");
-        tritanMenuItem.addItemListener(new java.awt.event.ItemListener() {
-
+        tritanMenuItem.setText("Tritanopia (Very Rare)");
+        tritanMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    simulate(ColorOracle.Simulation.tritan);
-                } else if (currentSimulation == Simulation.tritan) {
-                    tritanMenuItem.setState(true); // this will not trigger another event
-                }
+            public void actionPerformed(ActionEvent e) {
+                simulate(Simulation.tritan);
             }
         });
         menu.add(tritanMenuItem);
 
         // grayscale vision
-        grayscaleMenuItem.setLabel("Grayscale");
-        grayscaleMenuItem.addItemListener(new java.awt.event.ItemListener() {
-
+        grayscaleMenuItem.setText("Grayscale");
+        grayscaleMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    simulate(ColorOracle.Simulation.grayscale);
-                } else if (currentSimulation == Simulation.grayscale) {
-                    grayscaleMenuItem.setState(true); // this will not trigger another event
-                }
+            public void actionPerformed(ActionEvent e) {
+                simulate(ColorOracle.Simulation.grayscale);
             }
         });
+
         menu.add(grayscaleMenuItem);
 
         menu.addSeparator();
 
         // about
-        aboutMenuItem.setLabel("About...");
+        aboutMenuItem.setText("About...");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             @Override
@@ -417,7 +331,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
         menu.addSeparator();
 
         // exit
-        quitMenuItem.setLabel("Exit Color Oracle");
+        quitMenuItem.setText("Exit Color Oracle");
         quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             @Override
@@ -449,11 +363,10 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             if (!simulationVisible) {
                 Screen.detectScreens();
             }
-
             // simulate color-impaired vision for all attached screens
             for (Screen screen : Screen.getScreens()) {
 
-                // don't take a screenshot when a color-impaired simulation 
+                // don't take a screenshot when a color-impaired simulation
                 // is currently visible. Instead, use the same screenshot again.
                 if (!simulationVisible) {
                     screen.takeScreenshot();
@@ -494,23 +407,11 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
     }
 
     /**
-     * Updates the menu: makes sure only one item has a check mark.
-     */
-    private void updateMenuState() {
-        // make sure only one menu item is checked
-        normalMenuItem.setState(currentSimulation == Simulation.normal);
-        deutanMenuItem.setState(currentSimulation == Simulation.deutan);
-        protanMenuItem.setState(currentSimulation == Simulation.protan);
-        tritanMenuItem.setState(currentSimulation == Simulation.tritan);
-        grayscaleMenuItem.setState(currentSimulation == Simulation.grayscale);
-    }
-
-    /**
      * Event handler for the About menu item. Shows the about dialog.
      */
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
 
-        // hide the simulation window. Otherwise the about dialog would cover 
+        // hide the simulation window. Otherwise the about dialog would cover
         // the simulation window and capture events, which is bad if the user
         // clicks the button that starts the default web browser. The simulation
         // windows would remain visible and be covered by the web browser.
@@ -535,7 +436,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             // remember the current simulation
             currentSimulation = simulationType;
 
-            updateMenuState();
+//            updateMenuState();
 
             // hide the about dialog before taking a screenshot
             if (aboutDialog != null) {
@@ -572,7 +473,7 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
         // remember the current simulation
         currentSimulation = Simulation.normal;
 
-        updateMenuState();
+//        updateMenuState();
 
         // hide the window
         hideSimulation();
