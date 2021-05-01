@@ -28,7 +28,6 @@
             </resource>
         </resources>
     </build>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.dorkbox/SystemTray -->
         <dependency>
@@ -37,5 +36,4 @@
             <version>4.1</version>
         </dependency>
     </dependencies>
-    
 </project>

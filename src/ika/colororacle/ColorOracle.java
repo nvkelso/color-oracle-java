@@ -142,12 +142,16 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
             return;
         }
 
-        java.awt.EventQueue.invokeLater(() -> {
-            try {
-                new ColorOracle();
-            } catch (Exception ex) {
-                Logger.getLogger(ColorOracle.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(-1);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    new ColorOracle();
+                } catch (Exception ex) {
+                    Logger.getLogger(ColorOracle.class.getName()).log(Level.SEVERE, null, ex);
+                    System.exit(-1);
+                }
             }
         });
     }
@@ -232,21 +236,12 @@ public class ColorOracle extends WindowAdapter implements KeyListener, FocusList
      * Initializes the tray icon and attaches it to the system tray.
      */
     private void initTrayIcon() throws Exception {
-
-//        if (!SystemTray.isSupported()) {
-//            throw new Exception(TRAYICONS_NOT_SUPPORTED_MESSAGE);
-//        }
-
-        // get the SystemTray instance
-//        SystemTray tray = SystemTray.getSystemTray();
         SystemTray tray = SystemTray.get("Color Oracle");
         ImageIcon icon = loadImageIcon(MENUICON, "Color Oracle Icon");
         Image image = icon.getImage();
         tray.setImage(image);
         tray.setTooltip(TOOLTIP);
-//        final Menu menu = tray.getMenu();
 
-        // create the menu
         JMenu imenu = initMenu();
         tray.setMenu(imenu);
     }
